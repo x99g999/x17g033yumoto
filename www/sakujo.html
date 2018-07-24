@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <link rel="stylesheet" href="components/loader.css">
+    <script src="components/loader.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+     //ローカルストレージの設定
+      var qa = [];
+      var storage = localStorage;
+      var keyword = "quiz";
+      var li;
+
+      //問題を取得する
+      function initData() {
+        //データの読み込み処理
+         var strData = storage.getItem(keyword);
+
+        //データが存在しない場合はエラー
+        if (strData === null) {
+          alert("問題がありません。問題読込してから再実行してください");
+          //メインメニューに差し戻す
+          location.href = "index.html";
+        }else {
+          qa = JSON.parse(strData);
+
+           for (var i=0; i < qa.length; i++) {
+            li = document.createElement('li');
+            li.textContent ="【" + i + "】" + qa[i];
+            document.getElementById('list').appendChild(li);
+          }
+        }
+      }
+
+      //問題削除処理
+      function monsaku(){
+        //空白処理
+        if(document.getElementById("ban").value === "") {
+          alert("空白です");
+        }else {
+          //データ削除(入力値で削除する例)
+          var bango = document.getElementById("ban").value;
+          qa.splice(bango, 1 ); 
+          
+        //問題をストレージの保存
+          strData = JSON.stringify(qa);
+          storage.setItem(keyword, strData);
+
+          document.getElementById('list').innerHTML ="";
+          for (var i=0; i < qa.length; i++) {
+            li = document.createElement('li');
+            li.textContent ="【" + i + "】" + qa[i];
+            document.getElementById('list').appendChild(li);
+          }
+          //画面表示
+          document.getElementById("resultMessage1").innerHTML = "問題削除完了";
+          
+          //入力ボックスの初期化
+          document.getElementById("ban").value = "";
+        }
+      }
+    </script>
+</head>
+<body onload="initData()">
+  <h1 id="title">問題削除</h1>
+  <h3>問題リスト</h3>
+  <div id="ran">
+  <ul style="list-style: none;" id="list">
+  </ul>
+  </div>
+  <br>
+  <div id="sakujomenu">
+    
+    削除したい問題<br>
+    番号：<input type="text" id="ban"><br>
+    <br>
+    <button class="button" onclick="monsaku()">削除</button>
+    <br>
+    <br>
+    <a href="index.html">メニュー画面に戻る</a>
+  </div>
+  <p id="resultMessage1"></p>
+  <p id="resultMessage2"></p>
+</body>
+</html>

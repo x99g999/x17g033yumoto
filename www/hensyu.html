@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <link rel="stylesheet" href="components/loader.css">
+    <script src="components/loader.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+      //ローカルストレージの設定
+      var qa = [];
+      var storage = localStorage;
+      var keyword = "quiz";
+
+      //問題を取得する
+      function initData() {
+        //データの読み込み処理
+         var strData = storage.getItem(keyword);
+
+        //データが存在しない場合はエラー
+        if (strData === null) {
+          alert("問題がありません。問題読込してから再実行してください");
+          //メインメニューに差し戻す
+          location.href = "index.html";
+        }else {
+          qa = JSON.parse(strData);
+
+           for (var i=0; i < qa.length; i++) {
+            var li = document.createElement('li');
+            li.textContent ="【" + i + "】" + qa[i];
+            document.getElementById('list').appendChild(li);
+          }
+        }
+      }
+
+     //問題編集処理
+    function monhen(){
+      //空白処理
+      if(document.getElementById("hen").value === "" |document.getElementById("mon").value === "" | document.getElementById("su").value === "") {
+          alert("空白です");
+        }else {
+          var ban = document.getElementById("hen").value;
+          
+          //内容を変更
+          var m = document.getElementById("mon").value;
+          var s = document.getElementById("su").value;
+          qa[ban] = [m,s];
+          
+          //問題をストレージの保存
+          strData = JSON.stringify(qa);
+          storage.setItem(keyword, strData);
+          
+          document.getElementById('list').innerHTML ="";
+          for (var i=0; i < qa.length; i++) {
+              var li = document.createElement('li');
+              li.textContent ="【" + i + "】" + qa[i];
+              document.getElementById('list').appendChild(li);
+          }
+
+          //画面表示
+          document.getElementById("resultMessage1").innerHTML = "問題編集完了";
+
+          //テキストボックスの初期化
+          document.getElementById("hen").value = "";
+          document.getElementById("mon").value = "";
+          document.getElementById("su").value = "";
+        }      
+      }
+
+
+    </script>
+</head>
+  <body onload="initData()">
+  <h1 id="title">問題編集</h1>
+  <h3>問題リスト</h3>
+  <div id="ran">
+  <ul style="list-style: none;" id="list">
+  </ul>
+  </div>
+
+
+  <div id="hensyumenu"><br>
+
+    編集したい問題<br>
+    番号:<input type="text" id="hen"><br>
+    <br>
+    編集する内容<br>
+    問題：<input type="text" id="mon"><br>
+    数値：<input type="text" id="su"><br>
+    <br>
+    <button class="button" onclick="monhen()">編集</button>
+    <br>
+    <br>
+    <a href="index.html">メニュー画面に戻る</a>
+  </div>
+  <p id="resultMessage1"></p>
+</body>
+</html>

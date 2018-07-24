@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <link rel="stylesheet" href="components/loader.css">
+    <script src="components/loader.js"></script>
+    <link rel="stylesheet" href="css/quiz.css">
+    <script>
+      var mondaiNum = 0;
+      var count = 0;
+      var correctNum = 0;
+
+      //ローカルストレージの設定
+      var qa = [];
+      var storage = localStorage;
+      var keyword = "quiz";
+
+      //問題を取得する
+      function initData() {
+        //データの読み込み処理
+         var strData = storage.getItem(keyword);
+
+        //データが存在しない場合はエラー
+        if (strData === null) {
+          alert("問題がありません。問題読込してから再実行してください");
+          //メインメニューに差し戻す
+          location.href = "index.html";
+        }else {
+          qa = JSON.parse(strData);
+          mondaiNum = qa.length;
+
+          hyouji();
+        }
+      }
+    
+       // クリック時の答え判定
+        function hyouji() {
+            document.getElementById('monme').innerHTML = (count + 1) + '問目';
+            document.getElementById('question').innerHTML =  qa[count][0];
+            document.getElementById("kekka2").src ="";
+
+        };
+    
+        // クリック時の答え判定
+        function hantei(btnNo) {
+            //ボタンの制御（押せなくする）
+            document.getElementById('button1').disabled='disabled';
+            document.getElementById('button2').disabled='disabled';
+            
+            if (qa[count][1] == btnNo) {
+                correctNum++;
+                document.getElementById('kekka').innerHTML = "<a href='javascript:next()'>正解です</a>";
+                document.getElementById("kekka2").src ="img/animal_quiz_neko_maru.png";
+            }else{
+                document.getElementById('kekka').innerHTML = '<a href="javascript:next()">間違い</a>';
+                document.getElementById("kekka2").src ="img/animal_quiz_neko_batsu.png";
+            }
+            
+            //デバッグ表示（スマホで実行したときのみ表示される)
+            console.log("count="+count);
+            console.log("correctNum="+correctNum);
+        };
+        
+        function next(){
+            //画面の初期化（もとに戻す）
+            document.getElementById('button1').disabled="";
+            document.getElementById('button2').disabled="";
+            document.getElementById('kekka').innerHTML="";
+            document.getElementById("kekka2").src ="";
+            
+            //終了判定
+            if (count >= mondaiNum - 1) {
+                //ボタンの制御（非表示）
+                document.getElementById("button1").style.visibility = "hidden";
+                document.getElementById("button2").style.visibility = "hidden";
+                document.getElementById("monme").innerHTML = "";
+                document.getElementById("question").innerHTML = "";
+
+                 //成績を発表する
+                document.getElementById("qu").innerHTML = correctNum +"/" + qa.length;
+                //正解数と画像の表示
+                if(correctNum === qa.length) {
+                  //全問正解の場合
+                  document.getElementById("resultMessage").innerHTML = "全問正解！よくできました！";
+                  document.getElementById("resultImage").src ="img/gold.png";
+                }else if(correctNum >= qa.length * 0.6)  {
+                  //6割以上の場合
+                  document.getElementById("resultMessage").innerHTML = "惜しい！あともう一歩でした！";
+                  document.getElementById("resultImage").src ="img/silver.png";
+                }else {
+                  //6割未満の場合
+                  document.getElementById("resultMessage").innerHTML = "もう少しがんばりましょう。";
+                  document.getElementById("resultImage").src ="img/bronze.png";
+                }
+
+            }else{
+                // 次の問題表示
+                count++;
+                hyouji();
+            }
+        }; 
+    </script>
+</head>
+<body onload="initData()">
+    <h1>まるばつクイズ</h1>
+    <div id="wrapper">
+    <div id="monme"></div>
+    <div id="question"></div>
+    </div>
+    <div>
+    
+    <div id="qu"></div>
+    <p id="resultMessage"></p>
+    <img id="resultImage" src="">
+    </div>
+    <div id="marubatu" >
+      <input type="button" class="button" id="button1" value="○" onclick="hantei(1)">
+      <img id="resultImage" src="">
+      <input type="button" class="button" id="button2" value="×" onclick="hantei(2)">
+    </div>
+    <p id="kekka"></p>
+    <img id="kekka2" src="">
+    
+    <br>
+    <a href="index.html">メニュー画面に戻る</a>
+
+</body>
+</html>

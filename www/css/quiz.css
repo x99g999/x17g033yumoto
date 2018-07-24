@@ -1,0 +1,58 @@
+body{
+  background-color: #BBFFFF;
+  text-align: center;	
+}
+
+#wrapper {
+  margin: 0 auto;
+  margin-top: 30px;
+}
+
+#monme{
+  font-size: 20px;
+  text-align: left;
+}
+
+#question {
+  font-size: 20px;
+  text-align: left;
+}
+
+#marubatu {
+  text-align:center;
+}
+
+h1 {
+  text-align: center;
+}
+
+#qu {
+	width: 100%;
+	margin: 40px 0;
+	font-size: 60px;
+}
+
+#button1{
+  width: 80px;
+  height: 40px;
+  border: 1px solid black;
+  border-radius: 50px;
+  background-color: red;
+  font-size: 20px;
+  font-weight: 200px;
+  text-align: center;
+  color: #fff;
+}
+
+#button2{
+  width: 80px;
+  height: 40px;
+  border: 1px solid black;
+  border-radius: 50px;
+   background-color: blue;
+  font-size: 20px;
+  text-align: center;
+  color: #fff;
+}
+
+

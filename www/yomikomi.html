@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <link rel="stylesheet" href="components/loader.css">
+    <script src="components/loader.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+     //ローカルストレージの設定
+      var storage = localStorage;
+      //localStorageのキー(今回はquiz)
+      var keyword = "quiz"
+
+      //単語リスト(仮データ)
+      var kariData = [
+            ['Javaアプリケーションを実行するのにブラウザは必須である', 2],
+            ['javacコマンドでJavaプログラムをコンパイルできる ', 1],
+            ['javaコマンドでjavaプログラムを実行できる', 1],
+            ['javaのソースファイルの拡張子は「.java」である', 1],
+            ['JREにはjavacコマンドが含まれる', 2]
+        ];
+
+      //単語リスト
+      var qa = [];
+
+      //データの読み込み
+      function loadData() {
+        alert("データを読み込みます");
+        //ローカルストレージからデータを取り出す
+        var strData = storage.getItem(keyword);
+
+        if (strData === null) {
+          alert("データがありません。初期データをロードします");
+          qa = kariData;
+          //ローカルストレージに保存する(初期データ)
+          strData = JSON.stringify(qa);
+          storage.setItem(keyword, strData);
+        }else{
+          //ローカルストレージからデータを取得する
+          strData = storage.getItem(keyword);
+          qa = JSON.parse(strData);
+        }
+
+        //結果表示
+        document.getElementById("resultMessage1").innerHTML = "問題読込完了";
+        document.getElementById("resultMessage2").innerHTML = "問題数は" + qa.length + "件です";
+      }
+
+      //問題の初期化
+      function resetData(){
+        storage.removeItem(keyword);
+        alert("ローカルストレージの内容を削除しました");
+        document.getElementById("resultMessage1").innerHTML = "";
+        document.getElementById("resultMessage2").innerHTML = "";
+      }
+    </script>
+</head>
+<body>
+    <h1 id="title">問題読込</h1>
+    <dib id="yomikomiFrom">
+      <button class="button" onclick="loadData()">問題読込</button><br>
+      <button class="button" onclick="resetData()">問題初期化</button><br>
+      <br>
+      <a href="index.html">メニュー画面に戻る</a>
+    </dib>
+  <p id="resultMessage1"></p>
+  <p id="resultMessage2"></p>
+</body>
+</html>
